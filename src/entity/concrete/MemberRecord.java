@@ -2,150 +2,120 @@ package entity.concrete;
 
 import entity.Book;
 import entity.Reader;
+import entity.enums.MemberRecordStatus;
+import entity.interfaces.IMemberRecord;
 import entity.utils.ValidationUtil;
 
-import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
-public class MemberRecord {
-    private UUID memberID;
-    //private String type;
-    private Date dateOfMembership;
-    private int maxBookLimit;
-    private Set<UUID> issuedBooksID;
+public class MemberRecord implements IMemberRecord {
+
+    private UUID memberRecordID;
+    private Reader relatedReader;
+    private Book relatedBook;
+    private MemberRecordStatus memberRecordStatus;
+    private float paidPrice;
+
     //private Reader member;
-    private String name,address;
-    private int phoneNo;
 
 
-
-
-
-
-    private Library library = Library.getInstance();
-
-
-    public Reader getMember() {
-        return library.getMember(this.memberID);
+    public MemberRecord(Reader relatedReader, Book relatedBook) {
+        this(UUID.randomUUID(), relatedReader, relatedBook);
     }
 
-    public void addBookIssued(Book book) {
-
-        ValidationUtil.requireNoNull(book, "book can not be null");
-        this.addBookIssued(book.getBook_ID());
+    public MemberRecord(Reader relatedReader, Book relatedBook, MemberRecordStatus memberRecordStatus) {
+        this(UUID.randomUUID(), relatedReader, relatedBook, memberRecordStatus);
     }
 
-    public void addBookIssued(UUID uuid) {
-        ValidationUtil.requireNoNull(uuid, "uuid can not be null");
-        issuedBooksID.add(uuid);
+    public MemberRecord(UUID memberRecordID, Reader relatedReader, Book relatedBook) {
+        this(memberRecordID, relatedReader, relatedBook, MemberRecordStatus.WAITING);
     }
 
-
-    public void removeBookIssued(Book book) {
-
-        ValidationUtil.requireNoNull(book, "book can not be null");
-        this.removeBookIssued(book.getBook_ID());
+    public MemberRecord(UUID memberRecordID, Reader relatedReader, Book relatedBook, MemberRecordStatus memberRecordStatus) {
+        this.setMemberRecordID(memberRecordID);
+        this.setRelatedReader(relatedReader);
+        this.setRelatedBook(relatedBook);
+        this.setMemberRecordStatus(memberRecordStatus);
+        this.setPaidPrice(0);
     }
 
-    public void removeBookIssued(UUID uuid) {
-        ValidationUtil.requireNoNull(uuid, "uuid can not be null");
-        issuedBooksID.remove(uuid);
+    @Override
+    public float payBill() {
+        this.setMemberRecordStatus(MemberRecordStatus.DONE);
+        return getRelatedBook().getPrice();
     }
 
 
-    public UUID getMemberID() {
-        return memberID;
+    public UUID getMemberRecordID() {
+        return memberRecordID;
     }
 
-    public Date getDateOfMembership() {
-        return dateOfMembership;
+    public Reader getRelatedReader() {
+        return relatedReader;
     }
 
-    public int getMaxBookLimit() {
-        return maxBookLimit;
+    public Book getRelatedBook() {
+        return relatedBook;
     }
 
-    public Set<UUID> getIssuedBooksID() {
-        return issuedBooksID;
+    public float getPaidPrice() {
+        return paidPrice;
     }
 
-    public String getName() {
-        return name;
+    public MemberRecordStatus getMemberRecordStatus() {
+        return memberRecordStatus;
     }
 
-    public String getAddress() {
-        return address;
+    public void setMemberRecordID(UUID memberRecordID) {
+        ValidationUtil.requireNoNull(memberRecordID, "MemberRecordID can not be null");
+        this.memberRecordID = memberRecordID;
     }
 
-    public int getPhoneNo() {
-        return phoneNo;
+    public void setRelatedReader(Reader relatedReader) {
+
+        ValidationUtil.requireNoNull(memberRecordID, "relatedReader can not be null");
+        this.relatedReader = relatedReader;
+    }
+
+    public void setRelatedBook(Book relatedBook) {
+
+        ValidationUtil.requireNoNull(memberRecordID, "relatedBook can not be null");
+        this.relatedBook = relatedBook;
     }
 
 
-    public void setMemberID(UUID memberID) {
-        ValidationUtil.requireNoNull(memberID,"MemberID can not be null");
-        this.memberID = memberID;
+
+    public void setMemberRecordStatus(MemberRecordStatus memberRecordStatus) {
+        ValidationUtil.requireNoNull(memberRecordID, "MemberRecordStatus can not be null");
+        this.memberRecordStatus = memberRecordStatus;
+
     }
-
-    public void setDateOfMembership(Date dateOfMembership) {
-        ValidationUtil.requireNoNull(memberID,"Membership Date can not be null");
-        this.dateOfMembership = dateOfMembership;
+    public void setPaidPrice(float paidPrice) {
+        ValidationUtil.requirePossitive((long)paidPrice,"paidPrice can not be lower than 0");
+        this.paidPrice = paidPrice;
     }
-
-    public void setMaxBookLimit(int maxBookLimit) {
-
-        ValidationUtil.requireNoNull(memberID,"Max Book Limit can not be null");
-        this.maxBookLimit = maxBookLimit;
-    }
-
-    public void setIssuedBooksID(Set<UUID> issuedBooksID) {
-
-        ValidationUtil.requireNoNull(issuedBooksID,"Issued Books ID can not be null");
-        this.issuedBooksID = issuedBooksID;
-    }
-
-    public void setName(String name) {
-
-        ValidationUtil.requireNoNull(issuedBooksID,"name can not be null");
-        this.name = name;
-    }
-
-    public void setAddress(String address) {
-
-        ValidationUtil.requireNoNull(issuedBooksID,"address can not be null");
-        this.address = address;
-    }
-
-    public void setPhoneNo(int phoneNo) {
-
-        ValidationUtil.requireNoNull(issuedBooksID,"phoneNo can not be null");
-        this.phoneNo = phoneNo;
-    }
-
 
     @Override
     public String toString() {
-        return "MemberRecord{" +
-                "phoneNo=" + phoneNo +
-                ", address='" + address + '\'' +
-                ", name='" + name + '\'' +
-                ", dateOfMembership=" + dateOfMembership +
-                '}';
+        return " MemberRecord { " +
+                " memberRecordID = " + memberRecordID +
+                ", relatedReader = " + relatedReader +
+                ", relatedBook = " + relatedBook +
+                " } ";
     }
 
     @Override
     public boolean equals(Object o) {
-        if(o==this) return true;
-        ValidationUtil.requireNoNull(o,"Compared object can not be null");
-        ValidationUtil.requireSameTypeOfObject(o,this,"Compared objects has to be from same classes");
+        if (this == o) return true;
+        ValidationUtil.requireIsInstanceOf(o, MemberRecord.class, "Compared object has to be instance of MemberRecord");
+        ValidationUtil.requireNoNull(o, "Compared object can not be null");
         MemberRecord that = (MemberRecord) o;
-        return Objects.equals(memberID, that.memberID);
+        return Objects.equals(memberRecordID, that.memberRecordID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(memberID);
+        return Objects.hashCode(memberRecordID);
     }
 }

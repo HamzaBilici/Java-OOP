@@ -6,13 +6,24 @@ import entity.utils.ValidationUtil;
 import java.util.*;
 
 public abstract class Person implements Bookable, Comparable<Person> {
-    private String name;
+    private String name, address, phoneNo;
     private UUID personID;
     private final Map<UUID, Book> books = new HashMap<>();
 
-    public Person(String name) {
+
+    public Person(String name, String address, UUID personID, String phoneNo) {
         this.setName(name);
-        this.personID = UUID.randomUUID();
+        this.setPersonID(personID);
+        this.setAddress(address);
+        this.setPhoneNo(phoneNo);
+    }
+
+
+    public Person(String name, String address, String phoneNo) {
+        this.setName(name);
+        this.setPersonID(UUID.randomUUID());
+        this.setAddress(address);
+        this.setPhoneNo(phoneNo);
     }
 
     public abstract String whoYouAre();
@@ -23,11 +34,6 @@ public abstract class Person implements Bookable, Comparable<Person> {
         return books.get(uuid);
     }
 
-    /*  public Book showBook(Integer index) {
-
-         // return books.get(uuid);
-      }
-  */
     @Override
     public Map<UUID, Book> getBooks() {
         return Collections.unmodifiableMap(books);
@@ -63,6 +69,14 @@ public abstract class Person implements Bookable, Comparable<Person> {
         return personID;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
     private void setName(String name) {
 
         ValidationUtil.requireNoNull(name, "Name cannot be null");
@@ -71,19 +85,35 @@ public abstract class Person implements Bookable, Comparable<Person> {
         this.personID = UUID.randomUUID();
     }
 
+    public void setAddress(String address) {
+        ValidationUtil.requireNoNull(address, "Address can not be null");
+        ValidationUtil.requireUnBlankString(address, "Address can not be blank");
+        this.address = address;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        ValidationUtil.requireUnBlankString(phoneNo, "Phone no can not be blank");
+        ValidationUtil.requireLengthofCharacter(phoneNo, 10, "Phone length does not match");
+        this.phoneNo = phoneNo;
+    }
+
+    private void setPersonID(UUID personID) {
+        ValidationUtil.requireNoNull(personID, "PersonID cannot be null");
+        this.personID = personID;
+    }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "name='" + name +
-                '}';
+        return " Person { " +
+                " name = " + name +
+                " } ";
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
         ValidationUtil.requireNoNull(o, "Compared object cannot be null");
-        ValidationUtil.requireSameTypeOfObject(o, this, "Compared objects has to have same classes");
+        ValidationUtil.requireIsInstanceOf(o, Person.class, "Compared objects has to be instance of Person");
         Person person = (Person) o;
         return Objects.equals(personID, person.personID);
     }

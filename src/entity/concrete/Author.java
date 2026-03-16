@@ -11,21 +11,11 @@ import java.util.*;
 
 public class Author extends Person implements IAuthor, Bookable {
 
-    @Override
-    public void newBook(String name, float price, BookStatus bookStatus, BookEdition bookEdition) {
-
-        newBook( name, price, bookStatus, bookEdition, new Date());
-
-    }
 
     @Override
-    public void newBook(String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date) {
-
-
-        Book book = new Book(this, name, price, bookStatus, bookEdition, date, this);
-
+    public void newBook(Book book) {
         this.getBooks().values().stream()
-                .filter(b -> (b.getName().equals(name) && b.getPrice() == price && b.getBookEdition().equals(bookEdition)))
+                .filter(b -> (b.getName().equals(book.getName()) && b.getPrice() == book.getPrice() && b.getBookEdition().equals(book.getBookEdition())))
                 .findFirst()
                 .ifPresentOrElse(
                         existingBook -> System.out.println("Kitap zaten var: " + existingBook.getBook_ID()),
@@ -34,12 +24,14 @@ public class Author extends Person implements IAuthor, Bookable {
                         }
                 );
 
-
-
     }
 
-    public Author(String name) {
-        super(name);
+    public Author(String name, String address, UUID personID, String phoneNo) {
+        super(name, address, personID, phoneNo);
+    }
+
+    public Author(String name, String address, String phoneNo) {
+        super(name, address, phoneNo);
     }
 
     @Override
@@ -50,10 +42,11 @@ public class Author extends Person implements IAuthor, Bookable {
 
     @Override
     public String toString() {
-        return "Author{"
-                +
-                "books=" + this.getBooks() +
-                '}';
+        return  super.toString() +
+                        " Author { "
+                        +
+                        " books = \n " + this.getBooks() +
+                        " } \n";
     }
 
     @Override
@@ -65,5 +58,6 @@ public class Author extends Person implements IAuthor, Bookable {
     public int hashCode() {
         return super.hashCode();
     }
+
 
 }

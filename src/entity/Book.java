@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Book implements IBook, Comparable<Book> {
+public abstract class Book implements IBook, Comparable<Book> {
     private UUID book_ID;
     private Author author;
     private String name;
@@ -21,7 +21,7 @@ public class Book implements IBook, Comparable<Book> {
     private Date dateOfPurchase;
     private Bookable owner;
 
-    public Book(Author author, String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date_of_purchase,Bookable owner) {
+    public Book(Author author, String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date_of_purchase, Bookable owner) {
         this.setBook_ID(UUID.randomUUID());
         this.setAuthor(author);
         this.setName(name);
@@ -30,11 +30,6 @@ public class Book implements IBook, Comparable<Book> {
         this.setBookEdition(bookEdition);
         this.setDateOfPurchase(date_of_purchase);
         this.setOwner(owner);
-    }
-
-    public Book(Date date_of_purchase) {
-
-        this.setDateOfPurchase(date_of_purchase);
     }
 
     public UUID getBook_ID() {
@@ -103,34 +98,6 @@ public class Book implements IBook, Comparable<Book> {
         this.dateOfPurchase = dateOfPurchase;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "name='" + name +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        ValidationUtil.requireNoNull(o, "Compared object cannot be null");
-        ValidationUtil.requireSameTypeOfObject(o, this, "Compared objects has to have same classes");
-
-        Book book = (Book) o;
-        return book_ID.equals(book.getBook_ID()) ;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(book_ID);
-    }
-
-
-    @Override
-    public int compareTo(Book o) {
-        ValidationUtil.requireNoNull(o, "Compared object cannot be null");
-        return this.getBook_ID().compareTo(o.getBook_ID());
-    }
 
     @Override
     public String getTitle() {
@@ -163,5 +130,32 @@ public class Book implements IBook, Comparable<Book> {
     public void updateStatus(BookStatus bookStatus) {
 
         this.bookStatus = bookStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Book { "+" UUID = "+book_ID + " name = " + name + " + status = "+ bookStatus+ " } ";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        ValidationUtil.requireNoNull(o, "Compared object cannot be null");
+        ValidationUtil.requireIsInstanceOf(o, Book.class, "Compared objects has to be instance of Book");
+
+        Book book = (Book) o;
+        return book_ID.equals(book.getBook_ID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(book_ID);
+    }
+
+
+    @Override
+    public int compareTo(Book o) {
+        ValidationUtil.requireNoNull(o, "Compared object cannot be null");
+        return this.getBook_ID().compareTo(o.getBook_ID());
     }
 }
