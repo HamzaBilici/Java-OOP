@@ -1,5 +1,6 @@
 package entity.main;
 import entity.Book;
+import entity.Reader;
 import entity.concrete.*;
 import entity.enums.BookEdition;
 import entity.enums.BookStatus;
@@ -17,10 +18,15 @@ public class LibraryApplication {
 
         Book book1 = new StudyBook(author1,"book1",5, BookStatus.AVAILABLE, BookEdition.PAPERBACK,new Date(),library);
         Book book2 = new Journal(author1,"book2",5, BookStatus.AVAILABLE, BookEdition.PAPERBACK,new Date(),library);
-        library.addBook(book1);
-        library.addBook(book2);
         author1.newBook(book1);
         author1.newBook(book2);
+        library.addBook(new StudyBook(book1));
+        library.addBook(new Journal(book2));
+        library.addBook(new Journal(book2));
+
+        Reader reader1= new Student("reader1","abc","5312275594");
+        library.addReader(reader1);
+
 
 
 
@@ -34,8 +40,8 @@ public class LibraryApplication {
                 System.out.println("1-Author Operations");
                 System.out.println("2-Reader Operations");
                 System.out.println("3-Library Operations");
-               /* System.out.println("4-Calculate Fine");
-                System.out.println("5-Create Bill");
+                System.out.println("4-Book Operations");
+               /* System.out.println("5-Create Bill");
                 System.out.println("6-Return Book");*/
                 System.out.println("--------------------");
 
@@ -56,7 +62,7 @@ public class LibraryApplication {
                         MainLibraryOperations.libraryOperations(scanner,librarian1);
                         break;
                     case "4":
-                        System.out.println("selected 4");
+                        MainBookOperations.bookOperations(scanner,librarian1);
                         break;
                     case "5":
                         System.out.println("selected 5");

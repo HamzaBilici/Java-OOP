@@ -11,7 +11,6 @@ public interface Bookable {
 
     void addBook(Book book);
 
-    void removeBook(Book book);
+    void removeBook(UUID bookUUID);
 
-    Book showBook(UUID uuid);
 }

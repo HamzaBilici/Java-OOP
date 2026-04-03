@@ -6,10 +6,18 @@ import entity.enums.BookStatus;
 import entity.interfaces.Bookable;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Magazine extends Book {
     public Magazine(Author author, String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date_of_purchase, Bookable owner) {
         super(author, name, price, bookStatus, bookEdition, date_of_purchase, owner);
+    }
+    public Magazine(Author author, String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date_of_purchase, Bookable owner, UUID uuid) {
+        super(author, name, price, bookStatus, bookEdition, date_of_purchase, owner,uuid);
+    }
+
+    public Magazine(Book book) {
+        super(book);
     }
 
     @Override

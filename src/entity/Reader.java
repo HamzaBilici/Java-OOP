@@ -54,8 +54,9 @@ public abstract class Reader extends Person implements IReader {
 
     @Override
     public void returnBook(Book book) {
-        ValidationUtil.requireNoNull(book, "Book can not be null while returning");
-        this.removeBook(book);
+       /* ValidationUtil.requireNoNull(book, "Book can not be null while returning");
+        this.removeBook(book);*/
+        //TODO
     }
 
     public boolean isVerified() {

@@ -7,6 +7,7 @@ import entity.concrete.Student;
 import entity.utils.ValidationUtil;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 abstract class MainReaderOperations {
@@ -97,48 +98,36 @@ abstract class MainReaderOperations {
     }
 
 
-    protected static void changeVerificationofReader(Scanner scanner, Librarian librarian) {
+    protected static Optional<Reader> changeVerificationofReader(Scanner scanner, Librarian librarian) {
         ArrayList<Reader> allReaders = listAllReaders(librarian);
-        int selectedReaderIndex = -1;
+
+        if (allReaders.isEmpty()) {
+            return Optional.empty();
+        }
+        Optional<Integer> selectedReaderIndex = InputSelections.getInputIndex(scanner, "Reader");
+        if (selectedReaderIndex.isEmpty()) {
+            System.out.println("Invalid input");
+            return Optional.empty();
+        }
         Reader selectedReader;
-        if (!allReaders.isEmpty()) {
-            System.out.println("Select Reader By their number");
-            try {
-                selectedReaderIndex = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException numberFormatException) {
-                System.out.println("Invalid input");
-                // continue;
-            }
-            try {
-                selectedReader = allReaders.get(selectedReaderIndex);
-                ValidationUtil.requireNoNull(selectedReader, "Selected Reader can not be null");
-
-                System.out.println("Enter Reader New Verification");
-                System.out.println("1-) Enable");
-                System.out.println("2-) Disable");
-                String selectedReaderVerification = scanner.nextLine();
-                switch (selectedReaderVerification) {
-                    case "1":
-                        selectedReader.setVerified(true);
-                        break;
-                    case "2":
-                        selectedReader.setVerified(false);
-                        break;
-                    default:
-                        System.out.println("Invalid Verification Option");
-                }
-
-
-            } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
-                System.out.println("Invalid Reader Selection : " + indexOutOfBoundsException);
-            } catch (NullPointerException nullPointerException) {
-                System.out.println("Null Reader : " + nullPointerException);
-            }
-
-
-            System.out.println("Returning menu");
-
+        try {
+            selectedReader = allReaders.get(selectedReaderIndex.get());
+            ValidationUtil.requireNoNull(selectedReader, "Selected Reader can not be null");
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            System.out.println("Invalid Reader Selection : " + indexOutOfBoundsException);
+            return Optional.empty();
         }
 
+
+        Optional<Boolean> selectedVerificationValue = InputSelections.getInputReaderVerification(scanner);
+        if (selectedVerificationValue.isEmpty()) {
+            System.out.println("Invalid Validation Selection");
+            return Optional.empty();
+        }
+        selectedReader.setVerified(selectedVerificationValue.get());
+
+        return Optional.of(selectedReader);
     }
+
+
 }

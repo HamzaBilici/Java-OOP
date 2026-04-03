@@ -20,7 +20,7 @@ public class Author extends Person implements IAuthor, Bookable {
                 .ifPresentOrElse(
                         existingBook -> System.out.println("Kitap zaten var: " + existingBook.getBook_ID()),
                         () -> {
-                            this.addBook(book);
+                            this.addBook(book,book.getBook_ID());
                         }
                 );
 

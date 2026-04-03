@@ -28,11 +28,7 @@ public abstract class Person implements Bookable, Comparable<Person> {
 
     public abstract String whoYouAre();
 
-    @Override
-    public Book showBook(UUID uuid) {
-        ValidationUtil.requireNoNull(uuid, "ID can not be null while getting book");
-        return books.get(uuid);
-    }
+
 
     @Override
     public Map<UUID, Book> getBooks() {
@@ -43,18 +39,18 @@ public abstract class Person implements Bookable, Comparable<Person> {
     public void addBook(Book book) {
 
         ValidationUtil.requireNoNull(book, "Book can not be null while adding");
-        books.put(UUID.randomUUID(), book);
+        addBook(book, UUID.randomUUID());
+    }
+
+    public void addBook(Book book, UUID uuid) {
+
+        ValidationUtil.requireNoNull(book, "Book can not be null while adding");
+        ValidationUtil.requireNoNull(uuid, "UUID can not be null while adding");
+        books.put(uuid, book);
     }
 
 
     @Override
-    public void removeBook(Book book) {
-
-        ValidationUtil.requireNoNull(book, "Book can not be null while removing");
-        books.entrySet().removeIf(entry -> entry.getValue() == book);
-
-    }
-
     public void removeBook(UUID uuid) {
         ValidationUtil.requireNoNull(uuid, "UUID can not be null while removing");
         books.remove(uuid);
@@ -106,6 +102,7 @@ public abstract class Person implements Bookable, Comparable<Person> {
     public String toString() {
         return " Person { " +
                 " name = " + name +
+                " id = " + personID +
                 " } ";
     }
 

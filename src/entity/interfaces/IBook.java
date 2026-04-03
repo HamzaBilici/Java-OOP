@@ -8,7 +8,6 @@ public interface IBook {
 
     Author getAuthor();
 
-    void changeOwner(Bookable newOwner,Bookable oldOwner);
 
     Bookable getOwner();
 

@@ -3,12 +3,12 @@ package entity.interfaces;
 import entity.Book;
 import entity.Reader;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ILibrary {
-    Reader getMember(UUID uuid);
-    void newBook(Book book);
-    void lendBook(Book book);
-    void takeBackBook(Book book);
-    Book showBook(UUID uuid);
+    Optional<Reader> getMember(UUID uuid);
+    void lendBook(UUID uuid,Reader reader);
+    void takeBackBook(UUID uuid,Reader reader);
+    void changeBookOwner(Bookable currentOwner,Bookable targetOwner,Book book);
 }

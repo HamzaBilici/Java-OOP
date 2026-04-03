@@ -22,7 +22,11 @@ public abstract class Book implements IBook, Comparable<Book> {
     private Bookable owner;
 
     public Book(Author author, String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date_of_purchase, Bookable owner) {
-        this.setBook_ID(UUID.randomUUID());
+        this(author,name,price,bookStatus,bookEdition,date_of_purchase,owner,UUID.randomUUID());
+    }
+
+    public Book(Author author, String name, float price, BookStatus bookStatus, BookEdition bookEdition, Date date_of_purchase, Bookable owner,UUID uuid) {
+        this.setBook_ID(uuid);
         this.setAuthor(author);
         this.setName(name);
         this.setPrice(price);
@@ -30,6 +34,9 @@ public abstract class Book implements IBook, Comparable<Book> {
         this.setBookEdition(bookEdition);
         this.setDateOfPurchase(date_of_purchase);
         this.setOwner(owner);
+    }
+    public Book (Book book){
+        this(book.getAuthor(), book.getName(), book.getPrice(), book.getBookStatus(),book.getBookEdition(),book.dateOfPurchase,book.getOwner(),book.getBook_ID());
     }
 
     public UUID getBook_ID() {
@@ -57,7 +64,7 @@ public abstract class Book implements IBook, Comparable<Book> {
     }
 
 
-    private void setBook_ID(UUID book_ID) {
+    public void setBook_ID(UUID book_ID) {
         ValidationUtil.requireNoNull(book_ID, "ID cannot be null");
         this.book_ID = book_ID;
     }
@@ -109,12 +116,6 @@ public abstract class Book implements IBook, Comparable<Book> {
         return this.author;
     }
 
-    @Override
-    public void changeOwner(Bookable newOwner, Bookable oldOwner) {
-        oldOwner.removeBook(this);
-        newOwner.addBook(this);
-
-    }
 
     @Override
     public Bookable getOwner() {
@@ -134,7 +135,7 @@ public abstract class Book implements IBook, Comparable<Book> {
 
     @Override
     public String toString() {
-        return "Book { "+" UUID = "+book_ID + " name = " + name + " + status = "+ bookStatus+ " } ";
+        return "Book { "+" UUID = "+book_ID + " name = " + name + " + status = "+ bookStatus+" + price = "+ price+  " } ";
     }
 
     @Override
